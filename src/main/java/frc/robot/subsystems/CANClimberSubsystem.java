@@ -16,9 +16,11 @@ private final SparkMaxConfig ClimberConfig;
 
 public CANClimberSubsystem() {
 
-ClimberConfig = new SparkMaxConfig();
+    ClimberConfig = new SparkMaxConfig();
 
  Climber = new SparkMax(7, MotorType.kBrushless);
 }
+
+//TODO: Make method to control climber
 
 }
