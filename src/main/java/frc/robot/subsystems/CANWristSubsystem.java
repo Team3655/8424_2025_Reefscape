@@ -65,10 +65,14 @@ public class CANWristSubsystem extends SubsystemBase {
 
   }
 
-
-
-  public void setArmSetpoint(double setpoint) {
+  public void setWristtpoint(double setpoint) {
     this.setpoint = setpoint;
+  }
+
+  public void moveWristToPosition (double position) {
+    pidController.setReference(position, ControlType.kPosition);
+
+    
   }
 
 }
