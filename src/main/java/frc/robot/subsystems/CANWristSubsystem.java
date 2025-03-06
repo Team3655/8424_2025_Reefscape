@@ -61,8 +61,6 @@ public class CANWristSubsystem extends SubsystemBase {
 
   public void resetEncoders(){
     Wrist.getEncoder().setPosition(0);
-  
-
   }
 
   public void setWristtpoint(double setpoint) {
@@ -71,8 +69,6 @@ public class CANWristSubsystem extends SubsystemBase {
 
   public void moveWristToPosition (double position) {
     pidController.setReference(position, ControlType.kPosition);
-
-    
   }
 
 }

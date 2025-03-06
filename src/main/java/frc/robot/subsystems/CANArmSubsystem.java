@@ -62,9 +62,8 @@ public class CANArmSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Arm Postion", Arm.getEncoder().getPosition());
-    
 
-    pidController.setReference(setpoint, ControlType.kPosition);
+    moveArmToPosition(setpoint);
   }
 
   public void resetEncoders(){
@@ -79,9 +78,7 @@ public class CANArmSubsystem extends SubsystemBase {
   }
 
   public void moveArmToPosition (double position) {
-
-
-    
+    pidController.setReference(setpoint, ControlType.kPosition);
   }
   
 
