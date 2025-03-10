@@ -63,12 +63,16 @@ public class CANWristSubsystem extends SubsystemBase {
     Wrist.getEncoder().setPosition(0);
   }
 
-  public void setWristtpoint(double setpoint) {
+  public void setWristpoint(double setpoint) {
     this.setpoint = setpoint;
   }
 
-  public void moveWristToPosition (double position) {
-    pidController.setReference(position, ControlType.kPosition);
-  }
+public void setWristSetpoint(double setpoint) {
+  this.setpoint = setpoint;
+}
 
+public void moveWristToPosition (double position) {
+  pidController.setReference(setpoint, ControlType.kPosition);
+
+}
 }

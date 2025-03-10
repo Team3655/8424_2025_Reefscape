@@ -5,6 +5,10 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.CANDriveSubsystem;
+
+import java.util.Set;
+
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -15,6 +19,6 @@ public final class Autos {
   }
 
   private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
+    
   }
 }

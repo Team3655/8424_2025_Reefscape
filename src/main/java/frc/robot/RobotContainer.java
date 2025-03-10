@@ -6,8 +6,10 @@ package frc.robot;
 
 import java.security.GeneralSecurityException;
 
+import edu.wpi.first.units.measure.Power;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -20,6 +22,8 @@ import frc.robot.subsystems.ArmConstants;
 import frc.robot.subsystems.CANArmSubsystem;
 import frc.robot.subsystems.CANClimberSubsystem;
 import frc.robot.subsystems.CANDriveSubsystem;
+import frc.robot.subsystems.CANWristSubsystem;
+import frc.robot.subsystems.WristConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -35,6 +39,7 @@ public class RobotContainer {
   private final CANDriveSubsystem driveSubsystem;
   private final CANArmSubsystem armSubsystem;
   private final CANClimberSubsystem climberSubsystem;
+  private final CANWristSubsystem wristSubsystem;
 
   // The driver's controller
   private final CommandJoystick driverJoystick = new CommandJoystick(OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -50,10 +55,11 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    driveSubsystem =  new CANDriveSubsystem();
+    driveSubsystem = new CANDriveSubsystem();
     armSubsystem = new CANArmSubsystem();
     climberSubsystem = new CANClimberSubsystem();
-   
+    wristSubsystem = new CANWristSubsystem();
+
     configureBindings();
 
     // Set the options to show up in the Dashboard for selecting auto modes. If you
@@ -87,20 +93,40 @@ public class RobotContainer {
     // value)
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
-            driveSubsystem, () -> -driverJoystick.getY() * 0.5, () -> rightStick.getX() * 0.7 ));
+            driveSubsystem, () -> -driverJoystick.getY() * 0.7, () -> rightStick.getX() * 0.7));
+    // driverJoystick.button(1).whileTrue(Commands.runOnce(()->
+    // driveSubsystem.stop(), driveSubsystem));
+    // driverJoystick.Logi(1).onTrue(Commands.runOnce(()->
+    // armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
+    tractorController.button(1)
+        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem));
+    tractorController.button(2)
+        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem));
+    tractorController.button(3)
+        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
+    tractorController.button(6)
+        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
+    tractorController.button(11)
+        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
+    driverJoystick.button(1)
+        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
+    // driverJoystick.button(11).onTrue(Commands.runOnce(()->
+    // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_3),
+    // wristSubsystem));
+    // driverJoystick.button(11).onTrue(Commands.runOnce(()->
+    // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_4),
+    // wristSubsystem));
+    // driverJoystick.button(11).onTrue(Commands.runOnce(()->
+    // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER),
+    // wristSubsystem));
+    // driverJoystick.button(11).onTrue(Commands.runOnce(()->
+    // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_RESTING),
+    // wristSubsystem));
 
-    //driverJoystick.button(1).whileTrue(Commands.runOnce(()-> driveSubsystem.stop(), driveSubsystem));
+    armSubsystem.setDefaultCommand(armSubsystem.manualArm(() -> tractorController.getRawAxis(1), armSubsystem));
 
-    driverJoystick.button(1).onTrue(Commands.runOnce(()-> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem));
-    driverJoystick.button(2).onTrue(Commands.runOnce(()-> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem));
-    driverJoystick.button(3).onTrue(Commands.runOnce(()-> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
-    driverJoystick.button(6).onTrue(Commands.runOnce(()-> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
-    driverJoystick.button(11).onTrue(Commands.runOnce(()-> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
-
-    
     // Set the default command for the roller subsystem to the command from the
     // factory with the values provided by the triggers on the operator controller
-   
 
   }
 
