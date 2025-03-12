@@ -99,17 +99,16 @@ public class RobotContainer {
     // driverJoystick.Logi(1).onTrue(Commands.runOnce(()->
     // armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
     tractorController.button(1)
-        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem));
+        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem));
     tractorController.button(2)
-        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem));
+        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem));
     tractorController.button(3)
-        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
-    tractorController.button(6)
-        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
-    tractorController.button(11)
-        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
-    driverJoystick.button(1)
-        .onTrue(Commands.runOnce(() -> armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
+        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
+    tractorController.button(4)
+        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
+    tractorController.button(5)
+        .onTrue(Commands.runOnce(()-> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
+
     // driverJoystick.button(11).onTrue(Commands.runOnce(()->
     // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_3),
     // wristSubsystem));
@@ -123,7 +122,7 @@ public class RobotContainer {
     // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_RESTING),
     // wristSubsystem));
 
-    armSubsystem.setDefaultCommand(armSubsystem.manualArm(() -> tractorController.getRawAxis(1), armSubsystem));
+    climberSubsystem.setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
 
     // Set the default command for the roller subsystem to the command from the
     // factory with the values provided by the triggers on the operator controller

@@ -14,8 +14,10 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -33,13 +35,16 @@ public class CANArmSubsystem extends SubsystemBase {
 
   private double setpoint;
 
+AnalogInput coralSensor = new AnalogInput(3);
   /** Creates a new ArmSubsystem. */
   public CANArmSubsystem() {
 
     ArmConfig = new SparkMaxConfig();
     algaeConfig = new SparkMaxConfig();
 
-    ArmConfig.closedLoop.p(.1);
+    ArmConfig.idleMode(IdleMode.kCoast);
+
+    ArmConfig.closedLoop.p(.03);
     ArmConfig.closedLoop.i(0);
     ArmConfig.closedLoop.d(0);
 
@@ -47,18 +52,21 @@ public class CANArmSubsystem extends SubsystemBase {
     algae = new SparkMax(8, MotorType.kBrushless);
 
     Arm.configure(ArmConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    algae.configure(ArmConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    algae.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     sparkController = Arm.getClosedLoopController();
 
-    setpoint = 0.0;
+    Arm.getEncoder().setPosition(0.0);
+    setpoint = ArmConstants.ARM_START;
+
+    SmartDashboard.putNumber("Coral Sensor", getCoralSensor());
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Arm Postion", Arm.getEncoder().getPosition());
-    //sparkController.setReference(setpoint, ControlType.kPosition);
+    sparkController.setReference(setpoint, ControlType.kPosition);
   }
 
   public void resetEncoders() {
@@ -66,12 +74,16 @@ public class CANArmSubsystem extends SubsystemBase {
     // Arm.getEncoder().setPosition(0);
   }
 
-  public void setArmSetpoint(double setpoint) {
+  public void updateArmSetpoint(double setpoint) {
     this.setpoint = setpoint;
   }
 
-  public Command manualArm(DoubleSupplier voltage, CANArmSubsystem armSubsystem) { 
-    return Commands.run(() -> Arm.setVoltage(voltage.getAsDouble() * 12), armSubsystem);
+  public double getCoralSensor() {
+    return coralSensor.getValue();
   }
+
+  //public Command manualArm(DoubleSupplier voltage, CANArmSubsystem armSubsystem) { 
+  //  return Commands.run(() -> Arm.setVoltage(voltage.getAsDouble() * 12), armSubsystem);
+ // }
 
 }

@@ -2,10 +2,9 @@ package frc.robot.subsystems;
 
 public class ArmConstants {
     
-
-    public static double ARM_LEVEL_2 = -200;
-    public static double ARM_LEVEL_3 = -8.3;
-    public static double ARM_LEVEL_4 = 50;
-    public static double ARM_LEVEL_FEEDER = 100; 
-    public static double ARM_LEVEL_RESTING = 20; 
+    public static double ARM_START = 0.0;
+    public static double ARM_LEVEL_2 = 255;
+    public static double ARM_LEVEL_3 = 420;
+    public static double ARM_LEVEL_4 = 650;
+    public static double ARM_LEVEL_FEEDER = 160; 
 }
