@@ -98,15 +98,21 @@ public class RobotContainer {
     // driveSubsystem.stop(), driveSubsystem));
     // driverJoystick.Logi(1).onTrue(Commands.runOnce(()->
     // armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
-    tractorController.button(1)
-        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem));
     tractorController.button(2)
+        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem));
+        tractorController.button(2)
+        .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_2), wristSubsystem));
+    tractorController.button(3)
         .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem));
     tractorController.button(3)
-        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
+    .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_3), wristSubsystem));
     tractorController.button(4)
+        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
+    tractorController.button(1)
         .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
-    tractorController.button(5)
+        tractorController.button(1)
+        .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER), wristSubsystem));
+    tractorController.button(6)
         .onTrue(Commands.runOnce(()-> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
 
     // driverJoystick.button(11).onTrue(Commands.runOnce(()->
