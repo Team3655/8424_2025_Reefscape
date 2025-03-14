@@ -6,11 +6,9 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.CANDriveSubsystem;
 
-import java.util.Set;
+import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
@@ -18,7 +16,11 @@ public final class Autos {
     return null;
   }
 
+  public static Command driveDistance(CANDriveSubsystem subsystem, double distance, DoubleSupplier speed, DoubleSupplier rotationSpeed) {
+    return new DriveDistanceCommand(subsystem, distance, speed, rotationSpeed);
+  }
+
   private Autos() {
-    
+
   }
 }

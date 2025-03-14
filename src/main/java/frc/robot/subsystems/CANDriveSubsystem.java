@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-
 public class CANDriveSubsystem extends SubsystemBase {
   private final SparkMax leftFront;
   private final SparkMax leftBack;
@@ -28,7 +27,7 @@ public class CANDriveSubsystem extends SubsystemBase {
 
   public CANDriveSubsystem() {
     // create BRUSHLESS motors for drive and arm
-   
+
     leftFront = new SparkMax(1, MotorType.kBrushless);
     leftBack = new SparkMax(2, MotorType.kBrushless);
     rightFront = new SparkMax(3, MotorType.kBrushless);
@@ -52,7 +51,6 @@ public class CANDriveSubsystem extends SubsystemBase {
     // breakers.
     SparkMaxConfig config = new SparkMaxConfig();
     config.voltageCompensation(12);
-  
 
     // Set configuration to follow leader and then apply it to corresponding
     // follower. Resetting in case a new controller is swapped
@@ -86,19 +84,29 @@ public class CANDriveSubsystem extends SubsystemBase {
     rightFront.set(0);
   }
 
-public static void drive(double d, int i) {
+  public static void drive(double d, int i) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'drive'");
-}
+  }
 
-public static void drive(int d, double e) {
+  public static void drive(int d, double e) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'drive'");
-}
+  }
 
-public void setDefaultCommand(CANDriveSubsystem driveSubsystem, Object object, Object object2) {
-  // TODO Auto-generated method stub
-  throw new UnsupportedOperationException("Unimplemented method 'setDefaultCommand'");
-}
-}
+  public void setDefaultCommand(CANDriveSubsystem driveSubsystem, Object object, Object object2) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setDefaultCommand'");
+  }
 
+  public void resetEncoders() {
+    leftFront.getEncoder().setPosition(0);
+    leftBack.getEncoder().setPosition(0);
+    rightFront.getEncoder().setPosition(0);
+    rightBack.getEncoder().setPosition(0);
+  }
+
+  public double getEncoderValue() {
+    return rightBack.getEncoder().getPosition();
+  }
+}

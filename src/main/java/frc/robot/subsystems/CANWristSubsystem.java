@@ -23,12 +23,11 @@ public class CANWristSubsystem extends SubsystemBase {
 
   public final SparkMax Wrist;
 
-  private final SparkMaxConfig WristConfig;  
+  private final SparkMaxConfig WristConfig;
 
   private SparkClosedLoopController pidController;
 
   private double setpoint;
-
 
   /** Creates a new ArmSubsystem. */
   public CANWristSubsystem() {
@@ -38,41 +37,30 @@ public class CANWristSubsystem extends SubsystemBase {
     WristConfig.closedLoop.i(0);
     WristConfig.closedLoop.d(0);
 
-    Wrist = new SparkMax(5, MotorType.kBrushless);
-   
+    WristConfig.closedLoopRampRate(3);
+  
 
+    Wrist = new SparkMax(5, MotorType.kBrushless);
 
     pidController = Wrist.getClosedLoopController();
-    
-    Wrist.configure(WristConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    setpoint = 0.0;
+    setpoint = WristConstants.WRIST_LEVEL_START;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-   
-    SmartDashboard.putNumber("Wrist Postion", Wrist.getEncoder().getPosition());
 
+    SmartDashboard.putNumber("Wrist Postion", Wrist.getEncoder().getPosition());
 
     pidController.setReference(setpoint, ControlType.kPosition);
   }
 
-  public void resetEncoders(){
+  public void resetEncoders() {
     Wrist.getEncoder().setPosition(0);
   }
 
   public void updateWristSetpoint(double setpoint) {
     this.setpoint = setpoint;
   }
-
-public void WristSetpoint(double setpoint) {
-  this.setpoint = setpoint;
-}
-
-public void moveWristToPosition (double position) {
-  pidController.setReference(setpoint, ControlType.kPosition);
-
-}
 }

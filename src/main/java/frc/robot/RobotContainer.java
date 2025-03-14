@@ -66,6 +66,7 @@ public class RobotContainer {
     // add additional auto modes you can add additional lines here with
     // autoChooser.addOption
     autoChooser.setDefaultOption("Autonomous", Autos.exampleAuto(driveSubsystem));
+    autoChooser.addOption("DriveDistance", Autos.driveDistance(driveSubsystem, 1.5, () -> 1.0, () -> 0.0));
   }
 
   /**
@@ -93,28 +94,31 @@ public class RobotContainer {
     // value)
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
-            driveSubsystem, () -> -driverJoystick.getY() * 0.7, () -> rightStick.getX() * 0.7));
+            driveSubsystem, () -> driverJoystick.getY() * 0.7, () -> rightStick.getX() * 0.7));
     // driverJoystick.button(1).whileTrue(Commands.runOnce(()->
     // driveSubsystem.stop(), driveSubsystem));
     // driverJoystick.Logi(1).onTrue(Commands.runOnce(()->
     // armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
     tractorController.button(2)
         .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem));
-        tractorController.button(2)
+    tractorController.button(2)
         .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_2), wristSubsystem));
     tractorController.button(3)
         .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem));
     tractorController.button(3)
-    .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_3), wristSubsystem));
+        .onTrue(Commands.sequence(Commands.waitSeconds(0.7),
+            Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_3), wristSubsystem)));
     tractorController.button(4)
         .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
     tractorController.button(1)
         .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
-        tractorController.button(1)
-        .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER), wristSubsystem));
     tractorController.button(6)
-        .onTrue(Commands.runOnce(()-> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
+        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
+    tractorController.button(6)
+        .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER),
+            wristSubsystem));
 
+            
     // driverJoystick.button(11).onTrue(Commands.runOnce(()->
     // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_3),
     // wristSubsystem));
@@ -128,7 +132,8 @@ public class RobotContainer {
     // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_RESTING),
     // wristSubsystem));
 
-    climberSubsystem.setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
+    climberSubsystem
+        .setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
 
     // Set the default command for the roller subsystem to the command from the
     // factory with the values provided by the triggers on the operator controller
@@ -142,6 +147,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return autoChooser.getSelected();
   }
 }
