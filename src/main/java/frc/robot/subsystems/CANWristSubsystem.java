@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import java.util.function.DoubleSupplier;
+
 import org.ejml.dense.row.decomposition.eig.SymmetricQRAlgorithmDecomposition_DDRM;
 
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -17,6 +19,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CANWristSubsystem extends SubsystemBase {
@@ -33,7 +37,7 @@ public class CANWristSubsystem extends SubsystemBase {
   public CANWristSubsystem() {
     WristConfig = new SparkMaxConfig();
 
-    WristConfig.closedLoop.p(.1);
+    WristConfig.closedLoop.p(.05);
     WristConfig.closedLoop.i(0);
     WristConfig.closedLoop.d(0);
 
@@ -63,4 +67,9 @@ public class CANWristSubsystem extends SubsystemBase {
   public void updateWristSetpoint(double setpoint) {
     this.setpoint = setpoint;
   }
+
+public Command manualwrist(DoubleSupplier voltage, CANWristSubsystem wristSubsystem) { 
+return Commands.run(() -> Wrist.setVoltage(voltage.getAsDouble() * 12), wristSubsystem);
+  }
+
 }

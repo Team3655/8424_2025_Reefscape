@@ -117,23 +117,17 @@ public class RobotContainer {
     tractorController.button(6)
         .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER),
             wristSubsystem));
+      
+      tractorController.button(11).whileTrue(armSubsystem.manualArm(() -> 0.7, armSubsystem));
+      tractorController.button(12).whileTrue(armSubsystem.manualArm(() -> -0.7, armSubsystem));
 
-            
-    // driverJoystick.button(11).onTrue(Commands.runOnce(()->
-    // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_3),
-    // wristSubsystem));
-    // driverJoystick.button(11).onTrue(Commands.runOnce(()->
-    // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_4),
-    // wristSubsystem));
-    // driverJoystick.button(11).onTrue(Commands.runOnce(()->
-    // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER),
-    // wristSubsystem));
-    // driverJoystick.button(11).onTrue(Commands.runOnce(()->
-    // wristSubsystem.setWristSetpoint(WristConstants.WRIST_LEVEL_RESTING),
-    // wristSubsystem));
+  //  climberSubsystem
+  //      .setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
 
-    climberSubsystem
-        .setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
+    wristSubsystem
+    .setDefaultCommand(wristSubsystem.manualwrist(() -> tractorController.getRawAxis(1), wristSubsystem));
+
+    
 
     // Set the default command for the roller subsystem to the command from the
     // factory with the values provided by the triggers on the operator controller

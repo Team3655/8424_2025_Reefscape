@@ -36,6 +36,7 @@ public class CANArmSubsystem extends SubsystemBase {
   private double setpoint;
 
 AnalogInput coralSensor = new AnalogInput(3);
+
   /** Creates a new ArmSubsystem. */
   public CANArmSubsystem() {
 
@@ -82,8 +83,8 @@ AnalogInput coralSensor = new AnalogInput(3);
     return coralSensor.getValue();
   }
 
-  //public Command manualArm(DoubleSupplier voltage, CANArmSubsystem armSubsystem) { 
-  //  return Commands.run(() -> Arm.setVoltage(voltage.getAsDouble() * 12), armSubsystem);
- // }
+  public Command manualArm(DoubleSupplier speed, CANArmSubsystem armSubsystem) { 
+return Commands.run(() -> Arm.set(speed.getAsDouble()), armSubsystem);
+  }
 
 }

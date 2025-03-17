@@ -33,8 +33,8 @@ Climber.configure(ClimberConfig, ResetMode.kResetSafeParameters, PersistMode.kPe
 
 //TODO: Make method to control climber
 
-public Command manualClimber(DoubleSupplier voltage, CANClimberSubsystem climberSubsystem) { 
-    return Commands.run(() -> Climber.setVoltage(voltage.getAsDouble() * 12), climberSubsystem);
+//public Command manualClimber(DoubleSupplier voltage, CANClimberSubsystem climberSubsystem) { 
+//    return Commands.run(() -> Climber.setVoltage(voltage.getAsDouble() * 12), climberSubsystem);
   }
 
-}
+//}
