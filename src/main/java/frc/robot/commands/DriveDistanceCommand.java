@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CANDriveSubsystem;
 
@@ -13,15 +11,13 @@ import frc.robot.subsystems.CANDriveSubsystem;
 public class DriveDistanceCommand extends Command {
   public CANDriveSubsystem m_drive;
   public double m_distance;
-  public DoubleSupplier m_speed;
-  public DoubleSupplier m_rotationSpeed;
+  public double m_speed;
 
   /** Creates a new DriveDistanceCommand. */
-  public DriveDistanceCommand(CANDriveSubsystem drive, double distance, DoubleSupplier speed, DoubleSupplier rotationSpeed) {
+  public DriveDistanceCommand(CANDriveSubsystem drive, double distance, double speed) {
     m_drive = drive;
     m_distance = distance;
     m_speed = speed;
-    m_rotationSpeed = rotationSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
   }
@@ -29,26 +25,27 @@ public class DriveDistanceCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_drive.resetEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.driveArcade(m_drive, m_speed, m_rotationSpeed);
+    m_drive.driveArcade(m_drive, () -> m_speed, () -> 0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_drive.driveArcade(m_drive, () -> 0.0, () -> 0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_drive.getEncoderValue() >= m_distance) {
+    if (Math.abs(m_drive.getDriveInches()) > m_distance) {
       return true;
     }
-
     return false;
   }
 }

@@ -4,12 +4,7 @@
 
 package frc.robot;
 
-import java.security.GeneralSecurityException;
-
-import edu.wpi.first.units.measure.Power;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
@@ -38,6 +33,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final CANDriveSubsystem driveSubsystem;
   private final CANArmSubsystem armSubsystem;
+  @SuppressWarnings("unused")
   private final CANClimberSubsystem climberSubsystem;
   private final CANWristSubsystem wristSubsystem;
 
@@ -66,8 +62,8 @@ public class RobotContainer {
     // add additional auto modes you can add additional lines here with
     // autoChooser.addOption
     autoChooser.setDefaultOption("Autonomous", Autos.exampleAuto(driveSubsystem));
-    autoChooser.addOption("DriveDistance", Autos.driveDistance(driveSubsystem, 1.5, () -> 1.0, () -> 0.0));
-  }
+    autoChooser.addOption("DriveDistance", Autos.driveDistance(driveSubsystem, 1.5,  1.0));
+  }  
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
@@ -94,20 +90,20 @@ public class RobotContainer {
     // value)
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
-            driveSubsystem, () -> driverJoystick.getY() * 0.7, () -> rightStick.getX() * 0.7));
+            driveSubsystem, () -> driverJoystick.getY() * 0.5, () -> rightStick.getX() * 0.5));
     // driverJoystick.button(1).whileTrue(Commands.runOnce(()->
     // driveSubsystem.stop(), driveSubsystem));
     // driverJoystick.Logi(1).onTrue(Commands.runOnce(()->
     // armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
     tractorController.button(2)
         .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem));
-    tractorController.button(2)
-        .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_2), wristSubsystem));
+    //tractorController.button(2)
+      // .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_2), wristSubsystem));
     tractorController.button(3)
         .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem));
-    tractorController.button(3)
-        .onTrue(Commands.sequence(Commands.waitSeconds(0.7),
-            Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_3), wristSubsystem)));
+    //tractorController.button(3)
+        //.onTrue(Commands.sequence(Commands.waitSeconds(0.7),
+         //  Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_3), wristSubsystem)));
     tractorController.button(4)
         .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
     tractorController.button(1)
@@ -121,13 +117,20 @@ public class RobotContainer {
       tractorController.button(11).whileTrue(armSubsystem.manualArm(() -> 0.7, armSubsystem));
       tractorController.button(12).whileTrue(armSubsystem.manualArm(() -> -0.7, armSubsystem));
 
+
+    driverJoystick.button(1).onTrue(
+        Commands.runOnce(
+            () -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), 
+            wristSubsystem));
+
   //  climberSubsystem
   //      .setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
 
     wristSubsystem
-    .setDefaultCommand(wristSubsystem.manualwrist(() -> tractorController.getRawAxis(1), wristSubsystem));
+    .setDefaultCommand(wristSubsystem.manualWrist(() -> tractorController.getRawAxis(1), wristSubsystem));
 
     
+
 
     // Set the default command for the roller subsystem to the command from the
     // factory with the values provided by the triggers on the operator controller

@@ -15,8 +15,6 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,7 +33,7 @@ public class CANArmSubsystem extends SubsystemBase {
 
   private double setpoint;
 
-AnalogInput coralSensor = new AnalogInput(3);
+  AnalogInput coralSensor = new AnalogInput(3);
 
   /** Creates a new ArmSubsystem. */
   public CANArmSubsystem() {
@@ -83,8 +81,8 @@ AnalogInput coralSensor = new AnalogInput(3);
     return coralSensor.getValue();
   }
 
-  public Command manualArm(DoubleSupplier speed, CANArmSubsystem armSubsystem) { 
-return Commands.run(() -> Arm.set(speed.getAsDouble()), armSubsystem);
+  public Command manualArm(DoubleSupplier speed, CANArmSubsystem armSubsystem) {
+    return Commands.run(() -> Arm.set(speed.getAsDouble()), armSubsystem);
   }
 
 }

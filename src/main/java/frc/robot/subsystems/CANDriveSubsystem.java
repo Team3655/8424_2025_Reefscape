@@ -11,8 +11,11 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +28,10 @@ public class CANDriveSubsystem extends SubsystemBase {
 
   private final DifferentialDrive drive;
 
+  private final AHRS gyro;
+
+  private final double DRIVE_GEAR_REDUCTION = 6;
+
   public CANDriveSubsystem() {
     // create BRUSHLESS motors for drive and arm
 
@@ -35,6 +42,9 @@ public class CANDriveSubsystem extends SubsystemBase {
 
     // set up differential drive class
     drive = new DifferentialDrive(leftFront, rightFront);
+
+    // Set up gyro
+    gyro = new AHRS(NavXComType.kMXP_SPI);
 
     // Set can timeout. Because this project only sets parameters once on
     // construction, the timeout can be long without blocking robot operation. Code
@@ -71,6 +81,7 @@ public class CANDriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Drive Inches", getDriveInches());
   }
 
   // Command to drive the robot with joystick inputs
@@ -84,21 +95,6 @@ public class CANDriveSubsystem extends SubsystemBase {
     rightFront.set(0);
   }
 
-  public static void drive(double d, int i) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'drive'");
-  }
-
-  public static void drive(int d, double e) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'drive'");
-  }
-
-  public void setDefaultCommand(CANDriveSubsystem driveSubsystem, Object object, Object object2) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setDefaultCommand'");
-  }
-
   public void resetEncoders() {
     leftFront.getEncoder().setPosition(0);
     leftBack.getEncoder().setPosition(0);
@@ -108,5 +104,19 @@ public class CANDriveSubsystem extends SubsystemBase {
 
   public double getEncoderValue() {
     return rightBack.getEncoder().getPosition();
+  }
+
+  public double getDriveInches() {
+    double distance = (rightBack.getEncoder().getPosition() / DRIVE_GEAR_REDUCTION) * 2 * Math.PI * 3;
+    return distance;
+  }
+
+
+  public void resetGyro() {
+    gyro.reset();
+  }
+
+  public double getYaw(){
+    return gyro.getYaw();
   }
 }
