@@ -38,8 +38,8 @@ public class RobotContainer {
   private final CANWristSubsystem wristSubsystem;
 
   // The driver's controller
-  private final CommandJoystick driverJoystick = new CommandJoystick(OperatorConstants.DRIVER_CONTROLLER_PORT);
-  private final CommandJoystick rightStick = new CommandJoystick(1);
+  private final CommandJoystick driverJoystick1 = new CommandJoystick(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  private final CommandJoystick driverJoystick2 = new CommandJoystick(1);
   private final CommandXboxController programmingController = new CommandXboxController(5);
 
   // The operator's controller
@@ -84,34 +84,51 @@ public class RobotContainer {
 
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
-            driveSubsystem, () -> driverJoystick.getY() * 0.5, () -> rightStick.getX() * 0.5));
-    // driverJoystick.button(1).whileTrue(Commands.runOnce(()->
-    // driveSubsystem.stop(), driveSubsystem));
-    // driverJoystick.Logi(1).onTrue(Commands.runOnce(()->
-    // armSubsystem.setArmSetpoint(ArmConstants.ARM_LEVEL_RESTING), armSubsystem));
-    tractorController.button(2)
-        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem));
-    //tractorController.button(2)
-      // .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_2), wristSubsystem));
-    tractorController.button(3)
-        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem));
-    //tractorController.button(3)
-        //.onTrue(Commands.sequence(Commands.waitSeconds(0.7),
-         //  Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_3), wristSubsystem)));
-    tractorController.button(4)
-        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
-    tractorController.button(1)
-        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
-    tractorController.button(6)
-        .onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
-    tractorController.button(6)
-        .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER),
-            wristSubsystem));
+            driveSubsystem, 
+            () -> driverJoystick1.getRawAxis(1) * 0.5, 
+            () -> driverJoystick2.getRawAxis(0) * 0.5));
 
-    driverJoystick.button(1).onTrue(
-        Commands.runOnce(
-            () -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), 
-            wristSubsystem));
+           /* driveSubsystem.setDefaultCommand(
+              driveSubsystem.driveArcade(
+                  driveSubsystem, 
+                  () -> programmingController.getLeftY() * 0.5, 
+                  () -> programmingController.getLeftX() * 0.5));*/
+
+
+                  tractorController.button(4).onTrue(
+                    Commands.sequence(
+                      Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem),
+                      Commands.waitSeconds(2),
+                      Commands.run(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem)
+                    )
+                    );
+
+
+                    tractorController.button(3).onTrue(
+                      Commands.sequence(
+                        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
+                        Commands.waitSeconds(2),
+                        Commands.run(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem)
+                      )
+                      );
+    
+
+                      tractorController.button(2).onTrue(
+      Commands.sequence(
+        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
+        Commands.waitSeconds(2),
+        Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem),
+        Commands.waitSeconds(2),
+        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem)
+      )
+    );
+
+
+    tractorController.button(7).onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), wristSubsystem));
+    tractorController.button(6).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
+    tractorController.button(1).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
+    tractorController.button(5).onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
+
 
 
     programmingController.a().onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.TEST), wristSubsystem));
@@ -120,6 +137,12 @@ public class RobotContainer {
     programmingController.x().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
     programmingController.y().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
 
+    programmingController.leftBumper().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
+    programmingController.rightBumper().onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
+
+
+    programmingController.povLeft().onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LET_GO), wristSubsystem));
+    
     programmingController.povRight().onTrue(
     Commands.sequence(
       Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem),
@@ -127,10 +150,6 @@ public class RobotContainer {
       Commands.run(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem)
     )
     );
-    
-    
-    
-    
     
     
     programmingController.povDown().onTrue(

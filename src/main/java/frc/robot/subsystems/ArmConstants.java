@@ -10,9 +10,11 @@ public class ArmConstants {
      * 0 is the lower limit
      */
     
-    public static double ARM_START = 0.0;
+    public static double ARM_START = 0;
     public static double ARM_LEVEL_2 = 0.0;
     public static double ARM_LEVEL_3 = 250;
     public static double ARM_LEVEL_4 = 530;
-    public static double ARM_LEVEL_FEEDER = 108; 
+    public static double ARM_LEVEL_FEEDER = 110; 
+    
+    
 }

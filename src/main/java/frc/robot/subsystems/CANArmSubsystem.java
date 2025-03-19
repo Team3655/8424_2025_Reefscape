@@ -36,7 +36,7 @@ public class CANArmSubsystem extends SubsystemBase {
 
     ArmConfig.idleMode(IdleMode.kCoast);
 
-    ArmConfig.closedLoop.p(.06);
+    ArmConfig.closedLoop.p(.04);
     ArmConfig.closedLoop.i(0);
     ArmConfig.closedLoop.d(0);
 
