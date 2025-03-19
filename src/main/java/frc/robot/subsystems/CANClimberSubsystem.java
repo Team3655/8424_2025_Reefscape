@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CANClimberSubsystem extends SubsystemBase {
     
-private final SparkMax Climber; 
+// private final SparkMax Climber; 
 
 private final SparkMaxConfig ClimberConfig; 
 
@@ -18,9 +18,9 @@ public CANClimberSubsystem() {
 
     ClimberConfig = new SparkMaxConfig();
 
- Climber = new SparkMax(7, MotorType.kBrushless);
+//  Climber = new SparkMax(7, MotorType.kBrushless);
 
-Climber.configure(ClimberConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+// Climber.configure(ClimberConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 }
 

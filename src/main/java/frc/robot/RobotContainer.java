@@ -40,6 +40,7 @@ public class RobotContainer {
   // The driver's controller
   private final CommandJoystick driverJoystick = new CommandJoystick(OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandJoystick rightStick = new CommandJoystick(1);
+  private final CommandXboxController programmingController = new CommandXboxController(5);
 
   // The operator's controller
   private final CommandGenericHID tractorController = new CommandGenericHID(2);
@@ -80,14 +81,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Set the A button to run the "runRoller" command from the factory with a fixed
-    // value ejecting the gamepiece while the button is held
 
-    // Set the default command for the drive subsystem to the command provided by
-    // factory with the values provided by the joystick axes on the driver
-    // controller. The Y axis of the controller is inverted so that pushing the
-    // stick away from you (a negative value) drives the robot forwards (a positive
-    // value)
     driveSubsystem.setDefaultCommand(
         driveSubsystem.driveArcade(
             driveSubsystem, () -> driverJoystick.getY() * 0.5, () -> rightStick.getX() * 0.5));
@@ -113,24 +107,60 @@ public class RobotContainer {
     tractorController.button(6)
         .onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER),
             wristSubsystem));
-      
-      tractorController.button(11).whileTrue(armSubsystem.manualArm(() -> 0.7, armSubsystem));
-      tractorController.button(12).whileTrue(armSubsystem.manualArm(() -> -0.7, armSubsystem));
-
 
     driverJoystick.button(1).onTrue(
         Commands.runOnce(
             () -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), 
             wristSubsystem));
 
-  //  climberSubsystem
-  //      .setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
 
-    wristSubsystem
-    .setDefaultCommand(wristSubsystem.manualWrist(() -> tractorController.getRawAxis(1), wristSubsystem));
-
+    programmingController.a().onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.TEST), wristSubsystem));
+    programmingController.b().onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), wristSubsystem));
     
+    programmingController.x().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
+    programmingController.y().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
 
+    programmingController.povRight().onTrue(
+    Commands.sequence(
+      Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem),
+      Commands.waitSeconds(2),
+      Commands.run(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem)
+    )
+    );
+    
+    
+    
+    
+    
+    
+    programmingController.povDown().onTrue(
+    Commands.sequence(
+      Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
+      Commands.waitSeconds(2),
+      Commands.run(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem)
+    )
+    );
+
+    programmingController.povUp().onTrue(
+      Commands.sequence(
+        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
+        Commands.waitSeconds(2),
+        Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem),
+        Commands.waitSeconds(2),
+        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem)
+      )
+    );
+
+
+    tractorController.button(21).onTrue(
+      Commands.sequence(
+        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
+        Commands.waitSeconds(2),
+        Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem),
+        Commands.waitSeconds(2),
+        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem)
+      )
+    );
 
     // Set the default command for the roller subsystem to the command from the
     // factory with the values provided by the triggers on the operator controller

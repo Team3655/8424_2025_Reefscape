@@ -5,29 +5,23 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
-import java.util.function.DoubleSupplier;
-
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.LimitSwitchConfig.Type;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CANArmSubsystem extends SubsystemBase {
 
   public final SparkMax Arm;
-  public final SparkMax algae;
 
   private final SparkMaxConfig ArmConfig;
-  private final SparkMaxConfig algaeConfig;
 
   private final SparkClosedLoopController sparkController;
 
@@ -39,32 +33,33 @@ public class CANArmSubsystem extends SubsystemBase {
   public CANArmSubsystem() {
 
     ArmConfig = new SparkMaxConfig();
-    algaeConfig = new SparkMaxConfig();
 
     ArmConfig.idleMode(IdleMode.kCoast);
 
-    ArmConfig.closedLoop.p(.03);
+    ArmConfig.closedLoop.p(.06);
     ArmConfig.closedLoop.i(0);
     ArmConfig.closedLoop.d(0);
 
+    ArmConfig.limitSwitch.forwardLimitSwitchType(Type.kNormallyOpen);
+    ArmConfig.limitSwitch.forwardLimitSwitchEnabled(true);
+    ArmConfig.idleMode(IdleMode.kBrake);
+ 
     Arm = new SparkMax(32, MotorType.kBrushless);
-    algae = new SparkMax(8, MotorType.kBrushless);
 
     Arm.configure(ArmConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    algae.configure(algaeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     sparkController = Arm.getClosedLoopController();
 
     Arm.getEncoder().setPosition(0.0);
     setpoint = ArmConstants.ARM_START;
 
-    SmartDashboard.putNumber("Coral Sensor", getCoralSensor());
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Arm Postion", Arm.getEncoder().getPosition());
+    SmartDashboard.putNumber("Coral Sensor", getCoralSensor());
     sparkController.setReference(setpoint, ControlType.kPosition);
   }
 
@@ -81,8 +76,8 @@ public class CANArmSubsystem extends SubsystemBase {
     return coralSensor.getValue();
   }
 
-  public Command manualArm(DoubleSupplier speed, CANArmSubsystem armSubsystem) {
-    return Commands.run(() -> Arm.set(speed.getAsDouble()), armSubsystem);
-  }
+  // public Command manualArm(DoubleSupplier speed, CANArmSubsystem armSubsystem) {
+  //   return Commands.run(() -> Arm.set(speed.getAsDouble()), armSubsystem);
+  // }
 
 }
