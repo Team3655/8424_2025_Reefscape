@@ -131,7 +131,7 @@ public class RobotContainer {
 
 
 
-    programmingController.a().onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.TEST), wristSubsystem));
+   
     programmingController.b().onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), wristSubsystem));
     
     programmingController.x().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_4), armSubsystem));
@@ -141,7 +141,7 @@ public class RobotContainer {
     programmingController.rightBumper().onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
 
 
-    programmingController.povLeft().onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LET_GO), wristSubsystem));
+    
     
     programmingController.povRight().onTrue(
     Commands.sequence(
@@ -171,15 +171,7 @@ public class RobotContainer {
     );
 
 
-    tractorController.button(21).onTrue(
-      Commands.sequence(
-        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
-        Commands.waitSeconds(2),
-        Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem),
-        Commands.waitSeconds(2),
-        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem)
-      )
-    );
+    
 
     // Set the default command for the roller subsystem to the command from the
     // factory with the values provided by the triggers on the operator controller
