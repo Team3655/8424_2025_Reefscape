@@ -13,7 +13,7 @@ public class ArmConstants {
     public static double ARM_START = 0;
     public static double ARM_LEVEL_2 = 0.0;
     public static double ARM_LEVEL_3 = 250;
-    public static double ARM_LEVEL_4 = 530;
+    public static double ARM_FIX = 530;
     public static double ARM_LEVEL_FEEDER = 110; 
     
     

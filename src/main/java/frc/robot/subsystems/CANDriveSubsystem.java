@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.function.DoubleSupplier;
-
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -14,10 +12,9 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CANDriveSubsystem extends SubsystemBase {
@@ -30,9 +27,17 @@ public class CANDriveSubsystem extends SubsystemBase {
 
   private final AHRS gyro;
 
-  private final double DRIVE_GEAR_REDUCTION = 6;
+  private final double DRIVE_GEAR_REDUCTION = 10.75;
+  private final double WHEEL_RADIUS_METERS = Units.inchesToMeters(3);
+  public final double WHEEL_CIRCUMFERENCE_METERS = 2 * Math.PI * WHEEL_RADIUS_METERS;
+
+  private double xSpeed;
+  private double zRotation;
 
   public CANDriveSubsystem() {
+
+    xSpeed = 0.0;
+    zRotation = 0.0;
     // create BRUSHLESS motors for drive and arm
 
     leftFront = new SparkMax(1, MotorType.kBrushless);
@@ -61,6 +66,7 @@ public class CANDriveSubsystem extends SubsystemBase {
     // breakers.
     SparkMaxConfig config = new SparkMaxConfig();
     config.voltageCompensation(12);
+    config.encoder.positionConversionFactor(1);
 
     // Set configuration to follow leader and then apply it to corresponding
     // follower. Resetting in case a new controller is swapped
@@ -72,28 +78,40 @@ public class CANDriveSubsystem extends SubsystemBase {
 
     // Remove following, then apply config to right leader
     config.disableFollowerMode();
+    config.inverted(true);
     rightFront.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     // Set conifg to inverted and then apply to left leader. Set Left side inverted
     // so that postive values drive both sides forward
-    config.inverted(true);
+    config.inverted(false);
     leftFront.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Drive Inches", getDriveInches());
+    SmartDashboard.putNumber("Drive Meters", getDriveMeters());
+    SmartDashboard.putNumber("Drive Inches", Units.metersToInches(getDriveMeters()));
+    SmartDashboard.putNumber("Gyro Deg", getGyroYaw());
+
+    drive.arcadeDrive(xSpeed, zRotation);
   }
 
   // Command to drive the robot with joystick inputs
-  public Command driveArcade(CANDriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier zRotation) {
-    return Commands.run(
-        () -> drive.arcadeDrive(xSpeed.getAsDouble(), zRotation.getAsDouble()), driveSubsystem);
+  // public Command driveArcade(CANDriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier zRotation) {
+  //   return Commands.run(
+  //       () -> drive.arcadeDrive(xSpeed.getAsDouble(), zRotation.getAsDouble()), driveSubsystem);
+  // }
+
+  public void arcadeDrive(double xSpeed, double zRotation) {
+    //drive.arcadeDrive(xSpeed, zRotation);
+
+    this.xSpeed = xSpeed;
+    this.zRotation = zRotation;
   }
 
-  public void stop() {
-    leftFront.set(0);
-    rightFront.set(0);
-  }
+  // public void stop() {
+  //   leftFront.set(0);
+  //   rightFront.set(0);
+  // }
 
   public void resetEncoders() {
     leftFront.getEncoder().setPosition(0);
@@ -102,13 +120,9 @@ public class CANDriveSubsystem extends SubsystemBase {
     rightBack.getEncoder().setPosition(0);
   }
 
-  public double getEncoderValue() {
-    return rightBack.getEncoder().getPosition();
-  }
-
-  public double getDriveInches() {
-    double distance = (rightBack.getEncoder().getPosition() / DRIVE_GEAR_REDUCTION) * 2 * Math.PI * 3;
-    return distance;
+  public double getDriveMeters() {
+    double distanceMeters = (leftFront.getEncoder().getPosition() / DRIVE_GEAR_REDUCTION) * WHEEL_CIRCUMFERENCE_METERS;
+    return distanceMeters;
   }
 
 
@@ -116,7 +130,7 @@ public class CANDriveSubsystem extends SubsystemBase {
     gyro.reset();
   }
 
-  public double getYaw(){
-    return gyro.getYaw();
+  public double getGyroYaw(){
+    return -1 * gyro.getYaw();
   }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CANDriveSubsystem;
 
@@ -11,14 +13,17 @@ import frc.robot.subsystems.CANDriveSubsystem;
 public class DriveRotateCommand extends Command {
 
   CANDriveSubsystem m_drive;
-  double m_angle;
-  double m_rotationSpeed;
+  double m_angleDegrees;
+  double m_maxRotSpeed;
+  private PIDController controller;
 
   /** Creates a new DriveRotateCommand. */
-  public DriveRotateCommand(CANDriveSubsystem drive, double angle, double rotationSpeed) {
+  public DriveRotateCommand(CANDriveSubsystem drive, double angleDegrees, double maxRotSpeed) {
     m_drive = drive;
-    m_angle = angle;
-    m_rotationSpeed = rotationSpeed;
+    m_angleDegrees = angleDegrees;
+    m_maxRotSpeed = maxRotSpeed;
+    controller = new PIDController(0.009, 0, 0);
+    controller.enableContinuousInput(-180, 180);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
   }
@@ -32,19 +37,23 @@ public class DriveRotateCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.driveArcade(m_drive, () -> 0.0, () -> m_rotationSpeed);
+    double speed = controller.calculate(m_drive.getGyroYaw(), m_angleDegrees);
+    speed = MathUtil.clamp(speed, -m_maxRotSpeed, m_maxRotSpeed);
+    m_drive.arcadeDrive(0, speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.driveArcade(m_drive, () -> 0.0, () -> 0.0);
+    m_drive.arcadeDrive(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_drive.getYaw() < m_angle + 5 && m_drive.getYaw() > m_angle - 5) return true;
+    if(controller.atSetpoint()) {
+      return true;
+    }
     return false;
   }
 }
