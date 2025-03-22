@@ -44,18 +44,21 @@ public final class Autos {
         Commands.runOnce(()-> wrist.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), wrist)));
   }
 
-  public static Command testAuto(
+  public static Command MIDDLE(
     CANDriveSubsystem drive, 
     CANArmSubsystem arm, 
     CANWristSubsystem wristSubsystem) {
 
       return Commands.sequence(
-        new DriveDistanceCommand(drive, 1, 0.5),
-        new ArmCommand(arm, ArmConstants.ARM_LEVEL_2),
+        new DriveDistanceCommand(drive, .5, 0.5),
+        new ArmCommand(arm, ArmConstants.ARM_FIX),
+        new WaitCommand(2.5),
         new WristCommand(wristSubsystem, WristConstants.TRANSITION_STATE),
-        new WaitCommand(1),
+        new WaitCommand(6),
+        new DriveDistanceCommand(drive, .5, 0.4),
         new WristCommand(wristSubsystem, WristConstants.WRIST_LEVEL_release),
-        new WaitCommand(1)
+        new WaitCommand(2),
+        new DriveDistanceCommand(drive, -.5, 0.4)
 
       );
     }
@@ -66,6 +69,11 @@ public final class Autos {
 
     public static Command forwardAndScore(CANDriveSubsystem drive, CANArmSubsystem arm, CANWristSubsystem wrist){
       return Commands.sequence(null);
+    }
+
+    public static Command driveDistance(CANDriveSubsystem drive, double distance, double maxSpeed)
+    {
+      return new DriveDistanceCommand(drive, distance, maxSpeed);
     }
 
 }

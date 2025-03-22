@@ -64,8 +64,10 @@ public class RobotContainer {
     // add additional auto modes you can add additional lines here with
     // autoChooser.addOption
 
-    autoChooser.addOption("testAuto", Autos.testAuto(driveSubsystem, armSubsystem, wristSubsystem));
+    autoChooser.addOption("testAuto", Autos.MIDDLE(driveSubsystem, armSubsystem, wristSubsystem));
     autoChooser.addOption("Cross the Line", Autos.crossLine(driveSubsystem));
+    autoChooser.addOption("MIDDLE", Autos.MIDDLE(driveSubsystem, armSubsystem, wristSubsystem));
+    autoChooser.addOption("Drive Distance", Autos.driveDistance(driveSubsystem, -0.5, 0.4));
     SmartDashboard.putData("Auto Choices", autoChooser);
   }  
 
@@ -91,6 +93,8 @@ public class RobotContainer {
              driverJoystick1.getRawAxis(1) * -0.6, 
              driverJoystick2.getRawAxis(0) * -0.6),
        driveSubsystem));
+
+       climberSubsystem.setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
 
        /*  driveSubsystem.setDefaultCommand(
           Commands.run(
@@ -138,11 +142,8 @@ public class RobotContainer {
     tractorController.button(1).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
     tractorController.button(5).onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
     tractorController.button(8).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem));
-
-
    
     programmingController.b().onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), wristSubsystem));
-    
     programmingController.x().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem));
     programmingController.y().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
     programmingController.povLeft().onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem) );
