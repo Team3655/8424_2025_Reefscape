@@ -109,7 +109,7 @@ public class RobotContainer {
                   tractorController.button(4).onTrue(
                     Commands.sequence(
                       Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem),
-                      Commands.waitSeconds(2),
+                      Commands.waitSeconds(1),
                       Commands.run(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem)
                     )
                     );
@@ -120,7 +120,7 @@ public class RobotContainer {
                     tractorController.button(3).onTrue(
                       Commands.sequence(
                         Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
-                        Commands.waitSeconds(2),
+                        Commands.waitSeconds(1),
                         Commands.run(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem)
                       )
                       );
@@ -128,10 +128,10 @@ public class RobotContainer {
 
                       tractorController.button(2).onTrue(
       Commands.sequence(
-        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
-        Commands.waitSeconds(2),
+        Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem),
+        Commands.waitSeconds(1),
         Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem),
-        Commands.waitSeconds(2),
+        Commands.waitSeconds(1),
         Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem)
       )
     );
