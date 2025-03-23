@@ -30,6 +30,8 @@ public CANClimberSubsystem() {
 
  Climber.configure(ClimberConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+ ClimberConfig.inverted(true); 
+
 }
 
  @Override
