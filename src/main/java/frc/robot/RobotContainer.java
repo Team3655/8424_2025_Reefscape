@@ -106,6 +106,13 @@ public class RobotContainer {
         programmingController.start().onTrue(Commands.runOnce(() -> driveSubsystem.resetEncoders(), driveSubsystem));
 
 
+
+
+tractorController.button(1).onTrue(Commands.sequence(
+          Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem),
+          Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER), wristSubsystem)
+        ));
+
                   tractorController.button(4).onTrue(
                     Commands.sequence(
                       Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem),
@@ -129,9 +136,9 @@ public class RobotContainer {
                       tractorController.button(2).onTrue(
       Commands.sequence(
         Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem),
-        Commands.waitSeconds(1),
+        Commands.waitSeconds(.75),
         Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem),
-        Commands.waitSeconds(1),
+        Commands.waitSeconds(.75),
         Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem)
       )
     );
@@ -139,7 +146,7 @@ public class RobotContainer {
 
     tractorController.button(6).onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), wristSubsystem));
     tractorController.button(7).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
-    tractorController.button(1).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
+   // tractorController.button(1).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
     tractorController.button(5).onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
     tractorController.button(8).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem));
    

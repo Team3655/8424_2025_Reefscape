@@ -33,7 +33,7 @@ public class CANWristSubsystem extends SubsystemBase {
   public CANWristSubsystem() {
     WristConfig = new SparkMaxConfig();
 
-    WristConfig.closedLoop.p(3);
+    WristConfig.closedLoop.p(2);
     WristConfig.closedLoop.i(0);
     WristConfig.closedLoop.d(0);
 
