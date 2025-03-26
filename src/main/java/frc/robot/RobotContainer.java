@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.subsystems.AlgaeConstants;
+//import frc.robot.subsystems.AlgaeConstants;
 import frc.robot.subsystems.ArmConstants;
-import frc.robot.subsystems.CANAlgaeSubsystem;
+//import frc.robot.subsystems.CANAlgaeSubsystem;
 import frc.robot.subsystems.CANArmSubsystem;
 import frc.robot.subsystems.CANClimberSubsystem;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -39,15 +39,17 @@ public class RobotContainer {
   @SuppressWarnings("unused")
   private final CANClimberSubsystem climberSubsystem;
   private final CANWristSubsystem wristSubsystem;
-  private final CANAlgaeSubsystem algaeSubsystem;
+  //private final C algaeSubsystem;
 
   // The driver's controller
   private final CommandJoystick driverJoystick1 = new CommandJoystick(OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandJoystick driverJoystick2 = new CommandJoystick(1);
   private final CommandXboxController programmingController = new CommandXboxController(5);
 
+
   // The operator's controller
   private final CommandGenericHID tractorController = new CommandGenericHID(2);
+  private final CommandGenericHID RBController = new CommandGenericHID(4);
 
   // The autonomous chooser
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -60,7 +62,7 @@ public class RobotContainer {
     armSubsystem = new CANArmSubsystem();
     climberSubsystem = new CANClimberSubsystem();
     wristSubsystem = new CANWristSubsystem();
-    algaeSubsystem = new CANAlgaeSubsystem();
+    //algaeSubsystem = new CANAlgaeSubsystem();
 
     configureBindings();
 
@@ -101,6 +103,7 @@ public class RobotContainer {
 
        climberSubsystem.setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
 
+       
       //tractorController.button(18).onTrue(Commands.runOnce(() -> algaeSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem) );
   
        /*  driveSubsystem.setDefaultCommand(
@@ -153,12 +156,12 @@ tractorController.button(1).onTrue(Commands.sequence(
 
     tractorController.button(6).onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), wristSubsystem));
     tractorController.button(7).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
-   // tractorController.button(1).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
+    //tractorController.button(1).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
     tractorController.button(5).onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
     tractorController.button(8).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem));
    
-    tractorController.button(17).onTrue(Commands.runOnce(() -> algaeSubsystem.updateAlgaeSetpoint(AlgaeConstants.ALGAE_START), algaeSubsystem));
-    tractorController.button(19).onTrue(Commands.runOnce(() -> algaeSubsystem.updateAlgaeSetpoint(AlgaeConstants.ALGAE_OUT), algaeSubsystem));
+    //tractorController.button(17).onTrue(Commands.runOnce(() -> algaeSubsystem.updateAlgaeSetpoint(AlgaeConstants.ALGAE_START), algaeSubsystem));
+    //tractorController.button(19).onTrue(Commands.runOnce(() -> algaeSubsystem.updateAlgaeSetpoint(AlgaeConstants.ALGAE_OUT), algaeSubsystem));
    
    
    
@@ -196,7 +199,60 @@ tractorController.button(1).onTrue(Commands.sequence(
       )
       );
 
-    
+
+
+
+
+// New controler starts here
+
+
+
+
+    climberSubsystem.setDefaultCommand(climberSubsystem.manualClimber(() -> RBController.getRawAxis(1), climberSubsystem));
+
+
+    RBController.button(1).onTrue(Commands.sequence(
+      Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem),
+      Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_FEEDER), wristSubsystem)
+    ));
+
+              RBController.button(4).onTrue(
+                Commands.sequence(
+                  Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem),
+                  Commands.waitSeconds(1),
+                  Commands.run(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem)
+                )
+                );
+
+                
+
+              RBController.button(3).onTrue(
+                  Commands.sequence(
+                    Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
+                    Commands.waitSeconds(1),
+                    Commands.run(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem)
+                  )
+                  );
+
+
+                  RBController.button(2).onTrue(
+  Commands.sequence(
+    Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem),
+    Commands.waitSeconds(.75),
+    Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem),
+    Commands.waitSeconds(.75),
+    Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_2), armSubsystem)
+  )
+);
+
+
+
+RBController.button(5).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
+RBController.button(8).onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
+RBController.button(6).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem));
+RBController.button(7).onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem) );
+               
+
 
     // Set the default command for the roller subsystem to the command from the
     // factory with the values provided by the triggers on the operator controller
