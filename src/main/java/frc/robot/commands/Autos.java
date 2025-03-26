@@ -63,6 +63,28 @@ public final class Autos {
       );
     }
 
+    public static Command RIGHT(
+    CANDriveSubsystem drive, 
+    CANArmSubsystem arm, 
+    CANWristSubsystem wristSubsystem) {
+
+      return Commands.sequence(
+        new DriveDistanceCommand(drive, 1 , 0.5),
+        new ArmCommand(arm, ArmConstants.ARM_FIX),
+        new WaitCommand(2.5),
+        new WristCommand(wristSubsystem, WristConstants.TRANSITION_STATE),
+        new WaitCommand(3),
+        new DriveDistanceCommand(drive, 1.2, 0.35),
+        new WaitCommand(1.5),
+        new WristCommand(wristSubsystem, WristConstants.WRIST_LEVEL_release),
+        new WaitCommand(1.5),
+        new DriveDistanceCommand(drive, -.5, 0.4),
+        new ArmCommand(arm, ArmConstants.ARM_LEVEL_FEEDER),
+        new WristCommand(wristSubsystem, WristConstants.WRIST_LEVEL_FEEDER)
+
+      );
+    }
+
     public static Command crossLine(CANDriveSubsystem drive) {
       return new DriveDistanceCommand(drive, 1, 0.5);
     }

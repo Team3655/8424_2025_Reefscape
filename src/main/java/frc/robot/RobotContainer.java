@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.subsystems.AlgaeConstants;
 import frc.robot.subsystems.ArmConstants;
+import frc.robot.subsystems.CANAlgaeSubsystem;
 import frc.robot.subsystems.CANArmSubsystem;
 import frc.robot.subsystems.CANClimberSubsystem;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -37,6 +39,7 @@ public class RobotContainer {
   @SuppressWarnings("unused")
   private final CANClimberSubsystem climberSubsystem;
   private final CANWristSubsystem wristSubsystem;
+  private final CANAlgaeSubsystem algaeSubsystem;
 
   // The driver's controller
   private final CommandJoystick driverJoystick1 = new CommandJoystick(OperatorConstants.DRIVER_CONTROLLER_PORT);
@@ -57,6 +60,7 @@ public class RobotContainer {
     armSubsystem = new CANArmSubsystem();
     climberSubsystem = new CANClimberSubsystem();
     wristSubsystem = new CANWristSubsystem();
+    algaeSubsystem = new CANAlgaeSubsystem();
 
     configureBindings();
 
@@ -68,6 +72,7 @@ public class RobotContainer {
     autoChooser.addOption("Cross the Line", Autos.crossLine(driveSubsystem));
     autoChooser.addOption("MIDDLE", Autos.MIDDLE(driveSubsystem, armSubsystem, wristSubsystem));
     autoChooser.addOption("Drive Distance", Autos.driveDistance(driveSubsystem, -0.5, 0.4));
+    autoChooser.addOption("RIGHT", Autos.RIGHT(driveSubsystem, armSubsystem, wristSubsystem));
     SmartDashboard.putData("Auto Choices", autoChooser);
   }  
 
@@ -96,6 +101,8 @@ public class RobotContainer {
 
        climberSubsystem.setDefaultCommand(climberSubsystem.manualClimber(() -> tractorController.getRawAxis(1), climberSubsystem));
 
+      //tractorController.button(18).onTrue(Commands.runOnce(() -> algaeSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem) );
+  
        /*  driveSubsystem.setDefaultCommand(
           Commands.run(
             ()-> driveSubsystem.arcadeDrive(
@@ -150,6 +157,11 @@ tractorController.button(1).onTrue(Commands.sequence(
     tractorController.button(5).onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
     tractorController.button(8).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem));
    
+    tractorController.button(17).onTrue(Commands.runOnce(() -> algaeSubsystem.updateAlgaeSetpoint(AlgaeConstants.ALGAE_START), algaeSubsystem));
+    tractorController.button(19).onTrue(Commands.runOnce(() -> algaeSubsystem.updateAlgaeSetpoint(AlgaeConstants.ALGAE_OUT), algaeSubsystem));
+   
+   
+   
     programmingController.b().onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), wristSubsystem));
     programmingController.x().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem));
     programmingController.y().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
@@ -157,12 +169,6 @@ tractorController.button(1).onTrue(Commands.sequence(
     programmingController.leftBumper().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_FEEDER), armSubsystem));
     programmingController.rightBumper().onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
 
-
-    
-    
-    
-    
-    
     programmingController.povRight().onTrue(
     Commands.sequence(
       Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_LEVEL_3), armSubsystem),
