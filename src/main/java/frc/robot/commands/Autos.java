@@ -50,12 +50,12 @@ public final class Autos {
     CANWristSubsystem wristSubsystem) {
 
       return Commands.sequence(
-        new DriveDistanceCommand(drive, .5, 0.5),
+        new DriveDistanceCommand(drive, .5, 0.3),
         new ArmCommand(arm, ArmConstants.ARM_FIX),
-        new WaitCommand(2.5),
+        new WaitCommand(2),
         new WristCommand(wristSubsystem, WristConstants.TRANSITION_STATE),
-        new WaitCommand(6),
-        new DriveDistanceCommand(drive, .5, 0.4),
+        new WaitCommand(5),
+        new DriveDistanceCommand(drive, .52, 0.4),
         new WristCommand(wristSubsystem, WristConstants.WRIST_LEVEL_release),
         new WaitCommand(2),
         new DriveDistanceCommand(drive, -.5, 0.4)
