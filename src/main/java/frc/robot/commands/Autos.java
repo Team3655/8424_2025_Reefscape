@@ -55,7 +55,7 @@ public final class Autos {
         new WaitCommand(2),
         new WristCommand(wristSubsystem, WristConstants.TRANSITION_STATE),
         new WaitCommand(5),
-        new DriveDistanceCommand(drive, .52, 0.4),
+        new DriveDistanceCommand(drive, .56, 0.4),
         new WristCommand(wristSubsystem, WristConstants.WRIST_LEVEL_release),
         new WaitCommand(2),
         new DriveDistanceCommand(drive, -.5, 0.4)
