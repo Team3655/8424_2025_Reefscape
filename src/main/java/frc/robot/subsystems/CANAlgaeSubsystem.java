@@ -22,7 +22,6 @@ public class CANAlgaeSubsystem extends SubsystemBase {
   public final SparkMax Algae;
 
   private final SparkMaxConfig AlgaeConfig;
-  private final SparkMaxConfig AlgaeIntakeConfig;
 
   private final SparkClosedLoopController sparkController;
 
@@ -32,7 +31,6 @@ public class CANAlgaeSubsystem extends SubsystemBase {
   public CANAlgaeSubsystem() {
 
     AlgaeConfig = new SparkMaxConfig();
-    AlgaeIntakeConfig = new SparkMaxConfig();
 
     AlgaeConfig.idleMode(IdleMode.kCoast);
 

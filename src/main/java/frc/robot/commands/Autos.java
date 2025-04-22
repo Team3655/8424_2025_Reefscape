@@ -89,9 +89,9 @@ public final class Autos {
       return new DriveDistanceCommand(drive, 1, 0.5);
     }
 
-    public static Command forwardAndScore(CANDriveSubsystem drive, CANArmSubsystem arm, CANWristSubsystem wrist){
-      return Commands.sequence(null);
-    }
+    // public static Command forwardAndScore(CANDriveSubsystem drive, CANArmSubsystem arm, CANWristSubsystem wrist){
+    //   return Commands.sequence(null);
+    // }
 
     public static Command driveDistance(CANDriveSubsystem drive, double distance, double maxSpeed)
     {

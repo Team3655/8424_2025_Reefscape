@@ -12,10 +12,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cameraserver.CameraServerShared;
-import edu.wpi.first.cscore.CameraServerJNI;
 import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -89,7 +86,7 @@ public class RobotContainer {
     autoChooser.addOption("Drive Distance", Autos.driveDistance(driveSubsystem, -0.5, 0.4));
     autoChooser.addOption("RIGHT", Autos.RIGHT(driveSubsystem, armSubsystem, wristSubsystem));
     SmartDashboard.putData("Auto Choices", autoChooser);}
-    }
+      }
    public void Robot() {
     //m_visionThread =
         new Thread(
