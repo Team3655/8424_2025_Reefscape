@@ -142,11 +142,6 @@ tractorController.button(1).onTrue(Commands.sequence(
     tractorController.button(5).onTrue(Commands.runOnce(() -> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_release), wristSubsystem));
     tractorController.button(7).onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem));
    
-    //tractorController.button(17).onTrue(Commands.runOnce(() -> algaeSubsystem.updateAlgaeSetpoint(AlgaeConstants.ALGAE_START), algaeSubsystem));
-    //tractorController.button(19).onTrue(Commands.runOnce(() -> algaeSubsystem.updateAlgaeSetpoint(AlgaeConstants.ALGAE_OUT), algaeSubsystem));
-   
-   
-   
     programmingController.b().onTrue(Commands.runOnce(()-> wristSubsystem.updateWristSetpoint(WristConstants.WRIST_LEVEL_START), wristSubsystem));
     programmingController.x().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_FIX), armSubsystem));
     programmingController.y().onTrue(Commands.runOnce(() -> armSubsystem.updateArmSetpoint(ArmConstants.ARM_START), armSubsystem));
