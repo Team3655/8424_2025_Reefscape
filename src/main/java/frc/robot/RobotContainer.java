@@ -4,16 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.cscore.CvSource;
-
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,9 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-//import frc.robot.subsystems.AlgaeConstants;
 import frc.robot.subsystems.ArmConstants;
-//import frc.robot.subsystems.CANAlgaeSubsystem;
 import frc.robot.subsystems.CANArmSubsystem;
 import frc.robot.subsystems.CANClimberSubsystem;
 import frc.robot.subsystems.CANDriveSubsystem;
@@ -46,7 +34,6 @@ public class RobotContainer {
   // The robot's subsystems
   private final CANDriveSubsystem driveSubsystem;
   private final CANArmSubsystem armSubsystem;
-  @SuppressWarnings("unused")
   private final CANClimberSubsystem climberSubsystem;
   private final CANWristSubsystem wristSubsystem;
   //private final C algaeSubsystem;
@@ -55,12 +42,6 @@ public class RobotContainer {
   private final CommandJoystick driverJoystick1 = new CommandJoystick(OperatorConstants.DRIVER_CONTROLLER_PORT);
   private final CommandJoystick driverJoystick2 = new CommandJoystick(1);
   private final CommandXboxController programmingController = new CommandXboxController(5);
-
-
-  
-
-  //UsbCamera usbCamera = new UsbCamera("USB Camera 0", 0);
-//MjpegServer mjpegServer1 = new MjpegServer("USB Camera", 1181);
 
   // The operator's controller
   private final CommandGenericHID tractorController = new CommandGenericHID(2);
@@ -77,62 +58,15 @@ public class RobotContainer {
     armSubsystem = new CANArmSubsystem();
     climberSubsystem = new CANClimberSubsystem();
     wristSubsystem = new CANWristSubsystem();
-    //mjpegServer1.setSource(usbCamera);
-    configureBindings();{
-    //algaeSubsystem = new CANAlgaeSubsystem();
+    
+    configureBindings();
+
     autoChooser.addOption("testAuto", Autos.MIDDLE(driveSubsystem, armSubsystem, wristSubsystem));
     autoChooser.addOption("Cross the Line", Autos.crossLine(driveSubsystem));
     autoChooser.addOption("MIDDLE", Autos.MIDDLE(driveSubsystem, armSubsystem, wristSubsystem));
     autoChooser.addOption("Drive Distance", Autos.driveDistance(driveSubsystem, -0.5, 0.4));
     autoChooser.addOption("RIGHT", Autos.RIGHT(driveSubsystem, armSubsystem, wristSubsystem));
-    SmartDashboard.putData("Auto Choices", autoChooser);}
-      }
-   public void Robot() {
-    //m_visionThread =
-        new Thread(
-            () -> {
-              // Get the UsbCamera from CameraServer
-              UsbCamera camera = CameraServer.startAutomaticCapture();
-              // Set the resolution
-              camera.setResolution(640, 480);
-
-              // Get a CvSink. This will capture Mats from the camera
-              CvSink cvSink = CameraServer.getVideo();
-              // Setup a CvSource. This will send images back to the Dashboard
-              CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 480);
-
-              // Mats are very memory expensive. Lets reuse this Mat.
-              Mat mat = new Mat();
-
-              // This cannot be 'true'. The program will never exit if it is. This
-              // lets the robot stop this thread when restarting robot code or
-              // deploying.
-              while (!Thread.interrupted()) {
-                // Tell the CvSink to grab a frame from the camera and put it
-                // in the source mat.  If there is an error notify the output.
-                if (cvSink.grabFrame(mat) == 0) {
-                  // Send the output the error.
-                  outputStream.notifyError(cvSink.getError());
-                  // skip the rest of the current iteration
-                  continue;
-                }
-                // Put a rectangle on the image
-                Imgproc.rectangle(
-                    mat, new Point(100, 100), new Point(400, 400), new Scalar(255, 255, 255), 5);
-                // Give the output stream a new image to display
-                outputStream.putFrame(mat);
-              }
-            });
-          
-        
-      
-
-
-    // Set the options to show up in the Dashboard for selecting auto modes. If you
-    // add additional auto modes you can add additional lines here with
-    // autoChooser.addOption
-
-    
+    SmartDashboard.putData("Auto Choices", autoChooser);
   }  
 
   /**
@@ -158,16 +92,7 @@ public class RobotContainer {
              driverJoystick2.getRawAxis(0) * -0.6),
        driveSubsystem));
 
-      
-       
-      //tractorController.button(18).onTrue(Commands.runOnce(() -> algaeSubsystem.updateWristSetpoint(WristConstants.TRANSITION_STATE), wristSubsystem) );
-  
-       /*  driveSubsystem.setDefaultCommand(
-          Commands.run(
-            ()-> driveSubsystem.arcadeDrive(
-            -1 * programmingController.getLeftY() * 0.5, 
-            -1 * programmingController.getLeftX() * 0.5),
-          driveSubsystem));*/
+
 
         programmingController.start().onTrue(Commands.runOnce(() -> driveSubsystem.resetEncoders(), driveSubsystem));
 
