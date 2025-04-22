@@ -9,12 +9,14 @@ public class ArmConstants {
      * 
      * 0 is the lower limit
      */
-    
+
+
+    public static double ARM_GEAR_REDUCTION = 64.0;
     public static double ARM_START = 0;
     public static double ARM_LEVEL_2 = 0.0;
-    public static double ARM_LEVEL_3 = 250;
-    public static double ARM_FIX = 530;
-    public static double ARM_LEVEL_FEEDER = 110; 
+    public static double ARM_LEVEL_3 = 250/16;
+    public static double ARM_FIX = 530/16; 
+    public static double ARM_LEVEL_FEEDER = 110/16; 
     
     
 }
